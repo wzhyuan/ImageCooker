@@ -108,7 +108,7 @@ class PilboxApplication(tornado.web.Application):
 
 class ImageHandler(tornado.web.RequestHandler):
     FORWARD_HEADERS = ["Cache-Control", "Expires", "Last-Modified"]
-    OPERATIONS = ["region", "resize", "rotate", "noop"]
+    OPERATIONS = ["region", "resize", "rotate", "noop", "transfrom"]
 
     _FORMAT_TO_MIME = {
         "gif": "image/gif",
@@ -231,7 +231,7 @@ class ImageHandler(tornado.web.RequestHandler):
 
     def _get_operations(self):
         return self.get_argument(
-            "op", self.settings.get("operation") or "resize").split(",")
+            "op", self.settings.get("operation") or "transfrom").split(",")
 
     def _get_resize_options(self):
         return self._get_options(
