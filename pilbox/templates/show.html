@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+<title>{{ title }}</title>
+	<meta charset="utf-8"/>
+
+
+  	<meta name="description" content=""/>
+  	<meta name="author" content=""/>
+
+
+    <!-- stylesheets -->
+    <link rel="stylesheet" href="{{ static_url("css/central.css") }}" type="text/css"/>
+    <link rel="stylesheet" href="{{ static_url("css/styles.css") }}" type="text/css"/>
+
+    <!--[if lte IE 7]>
+    <link rel="stylesheet" href="{{ static_url("yaml/core/iehacks.min.css") }}" type="text/css"/>
+    <![endif]-->
+    <script src="{{ static_url("js/jquery-1.11.0.min.js") }}"></script>
+    <script src="{{ static_url("js/jquery-migrate-1.2.1.min.js") }}"></script>
+
+<script>
+$(document).ready(function() {
+  $("#pageshow_form").submit(function(event){
+       event.preventDefault();
+    window.location="http://localhost:8000?url="+encodeURIComponent($('#url').val())+"&min_quality="+$('#min_quality').val()+"&max_quality="+$('#max_quality').val()+"&step="+$('#step').val()+"&format="+$('#format').val();
+  });
+
+  function load_images(row, url, format, quality) {
+    var size0 = '';
+    var size1 = '';
+    var type0 = '';
+    var type1 = '';
+    var url0 = 'http://localhost:8000/image?url='+encodeURIComponent(url);
+    var url1 = 'http://localhost:8000/image?url='+encodeURIComponent(url) +'&fmt='+ format +'&q='+quality;
+    $.ajax({
+     type: 'GET',
+     url: url0,
+     success: function(data, textStatus, request){
+          //alert(request.getResponseHeader('Content-Type') + request.getResponseHeader('Content-Length'));
+          type0 = request.getResponseHeader('Content-Type');
+          size0 = request.getResponseHeader('Content-Length');
+
+          $.ajax({
+           type: 'GET',
+           url: url1,
+           success: function(data, textStatus, request){
+                //alert(request.getResponseHeader('Content-Type') + request.getResponseHeader('Content-Length'));
+                type1 = request.getResponseHeader('Content-Type');
+                size1 = request.getResponseHeader('Content-Length');
+
+                var t = '<table>';
+                t += '<tr><td>' + type0 + ' | ' + size0 +'</td><td>'+type1 + ' | ' + quality + ' | ' + size1  + ' | ' + (size1/size0*100) + '%</td></tr>';
+                t += '<tr><td><img src="' +url0 +'"/></td><td> <img src="'+url1+'" /></td></tr>';
+                t += '</table>';
+
+                $('#image-table .row' + row).html(t);
+
+           },
+           error: function (request, textStatus, errorThrown) {
+                alert(request.getResponseHeader('Content-Type'));
+           }
+          });
+
+     },
+     error: function (request, textStatus, errorThrown) {
+          alert(request.getResponseHeader('Content-Type'));
+     }
+    });
+  };
+
+  image_url = "{{ url }}";
+  max_quality = {{ max_quality }};
+  min_quality = {{ min_quality }};
+  step = {{ step }};
+  format = "{{ format }}";
+
+  if (min_quality <= 0) {
+    min_quality = 1;
+  }
+  for (var row=0, quality=max_quality; quality>=min_quality; ) {
+    $('#image-table').append('<tr><td class="row'+row +'"></td></tr>');
+
+    load_images(row, image_url, format, quality);
+    row++;
+    quality -= step;
+  }
+
+});
+
+
+</script>
+</head>
+
+<body>
+
+
+<div id="pagespeed_show">
+<div class="ym-wrapper">
+    <div class="ym-wbox">
+  	<form method="POST" class="ym-form ym-columnar" id="pageshow_form">
+  		<h6 class="ym-fbox-heading">Image Factory </h6>
+  		<div class="ym-fbox">
+  			<label for="url">URL：  </label>
+  			<input name="url" id="url" type="text" size="256" value="{{ url }}" placeholder="Enter image url"/>
+  		</div>
+		<div class="ym-fbox">
+			  <div class="ym-fbox-wrap ym-grid">
+          <div class="ym-g25 ym-gl">
+            <div class="ym-gbox-left">
+              <label for="max_quality">Max Quality</label>
+              <input type="text" name="max_quality" id="max_quality" value="{{ max_quality }}" placeholder="100" />
+            </div>
+          </div>
+			    <div class="ym-g25 ym-gl">
+			      <div class="ym-gbox-left">
+			        <label for="min_quality" >Min Quality</label>
+			        <input type="text" name="min_quality" id="min_quality" value="{{ min_quality }}" placeholder="1" />
+			      </div>
+			    </div>
+			    <div class="ym-g25 ym-gl">
+			      <div class="ym-gbox-left">
+			        <label for="step">Quality Step</label>
+			        <input type="text" name="step" id="step" value="{{ step }}" placeholder="10" />
+			      </div>
+			    </div>
+          <div class="ym-g25 ym-gr">
+            <div class="ym-gbox-right">
+              <label for="format">format</label>
+              <select name="format" id="format">
+                  <option value="jpg" selected="selected">jpg</option>
+                  <option value="png" >png</option>
+                  <option value="gif" >gif</option>
+                  <option value="webp" >webp</option>
+              </select>
+            </div>
+          </div>
+			  </div>
+		</div>
+		<div class="ym-fbox-footer ym-fbox-button">
+			<button type="submit" class="save ym-save ym-success" id="custom">Submit</button>
+		</div>
+	</div>
+	</form>
+
+    </div>
+  </div>
+</div>
+
+    <table id="image-table">
+    </table>
+
+
+</body>

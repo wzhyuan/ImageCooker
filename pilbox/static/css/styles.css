@@ -1,0 +1,40 @@
+
+.ym-wrapper {
+  min-width: 760px;
+  max-width: 80em;
+  margin: 0 auto;
+}
+
+.ym-wbox { padding: 10px; }
+
+#pagespeed_show .ym-fbox-heading {
+	text-align: center;
+}
+
+#pagespeed_show .ym-wrapper {
+width: 320px;
+margin: 0;
+}
+
+#pagespeed_show .ym-form label {
+	width: 58px;
+}
+
+#pagespeed_show .ym-form input {
+	width: 640px;
+}
+
+.ym-columnar .ym-fbox-wrap {
+	margin-left: 3px;
+	margin-right: 10px;
+}
+
+#pagespeed_show #min_quality, 
+#pagespeed_show #max_quality, 
+#pagespeed_show #step{
+	width: 160px;
+}
+
+#pagespeed_show .ym-fbox-wrap{
+	width: 100%;
+}

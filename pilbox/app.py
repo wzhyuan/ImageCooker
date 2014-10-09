@@ -16,6 +16,8 @@
 
 from __future__ import absolute_import, division, with_statement
 
+import os
+
 import logging
 import socket
 
@@ -98,13 +100,37 @@ class PilboxApplication(tornado.web.Application):
             timeout=options.timeout,
             implicit_base_url=options.implicit_base_url,
             validate_cert=options.validate_cert,
-            content_type_from_image=options.content_type_from_image)
+            content_type_from_image=options.content_type_from_image,
+            template_path=os.path.join(os.path.dirname(__file__), "templates"),
+            static_path=os.path.join(os.path.dirname(__file__), "static"))
         settings.update(kwargs)
         tornado.web.Application.__init__(self, self.get_handlers(), **settings)
 
     def get_handlers(self):
-        return [(r"/", ImageHandler)]
+        return [(r"/image", ImageHandler),
+                (r"/", IndexHandler)]
 
+class IndexHandler(tornado.web.RequestHandler):
+
+    @tornado.gen.coroutine
+    def get(self):
+        url = self.get_argument('url', None)
+        if not url:
+            self.render("index.html")
+        else:
+            max_quality = int(self.get_argument('max_quality', 100))
+            min_quality = int(self.get_argument('min_quality', 10))
+            step        = int(self.get_argument('step', 10))
+            format      = self.get_argument('format', 'jpg')
+
+            params = {'title': url,
+                    'url': url,
+                    'max_quality': max_quality,
+                    'min_quality': min_quality,
+                    'step': step,
+                    'format': format}
+
+            self.render("show.html", **params)
 
 class ImageHandler(tornado.web.RequestHandler):
     FORWARD_HEADERS = ["Cache-Control", "Expires", "Last-Modified"]

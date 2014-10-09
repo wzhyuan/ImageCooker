@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+	<title>Image Factory</title>
+
+	<meta charset="utf-8"/>
+
+
+  	<meta name="description" content=""/>
+  	<meta name="author" content=""/>
+
+
+  	<!-- stylesheets -->
+  	<link rel="stylesheet" href="{{ static_url("css/central.css") }}" type="text/css"/>
+  	<link rel="stylesheet" href="{{ static_url("css/styles.css") }}" type="text/css"/>
+
+  	<!--[if lte IE 7]>
+  	<link rel="stylesheet" href="{{ static_url("yaml/core/iehacks.min.css") }}" type="text/css"/>
+  	<![endif]-->
+	<script src="{{ static_url("js/jquery-1.11.0.min.js") }}"></script>
+	<script src="{{ static_url("js/jquery-migrate-1.2.1.min.js") }}"></script>
+
+<script>
+$(document).ready(function() {
+  $("#pageshow_form").submit(function(event){
+       event.preventDefault();
+    window.location="http://localhost:8000?url="+encodeURIComponent($('#url').val())+"&min_quality="+$('#min_quality').val()+"&max_quality="+$('#max_quality').val()+"&step="+$('#step').val()+"&format="+$('#format').val();
+
+  });
+});
+</script>
+
+</head>
+
+<body>
+
+<div id="pagespeed_show">
+<div class="ym-wrapper">
+    <div class="ym-wbox">
+  	<form method="POST" class="ym-form ym-columnar" id="pageshow_form">
+  		<h6 class="ym-fbox-heading">Image Factory </h6>
+  		<div class="ym-fbox">
+  			<label for="url">URL：  </label>
+  			<input name="url" id="url" type="text" size="256" value="http://images.takungpao.com/2013/0415/20130415111019469.jpg" placeholder="Enter image url"/>
+  		</div>
+		<div class="ym-fbox">
+			  <div class="ym-fbox-wrap ym-grid">
+                <div class="ym-g25 ym-gl">
+                  <div class="ym-gbox-left">
+                    <label for="max_quality">Max Quality</label>
+                    <input type="text" name="max_quality" id="max_quality" value="100" placeholder="100" />
+                  </div>
+                </div>
+			    <div class="ym-g25 ym-gl">
+			      <div class="ym-gbox-left">
+			        <label for="min_quality" >Min Quality</label>
+			        <input type="text" name="min_quality" id="min_quality" value="0" placeholder="0" />
+			      </div>
+			    </div>
+			    <div class="ym-g25 ym-gl">
+			      <div class="ym-gbox-left">
+			        <label for="step">Quality Step</label>
+			        <input type="text" name="step" id="step" value="10" placeholder="10" />
+			      </div>
+			    </div>
+                 <div class="ym-g25 ym-gr">
+                  <div class="ym-gbox-right">
+                    <label for="format">format</label>
+                    <select name="format" id="format">
+                        <option value="jpg" selected="selected">jpg</option>
+                        <option value="png" >png</option>
+                        <option value="gif" >gif</option>
+                        <option value="webp" >webp</option>
+                    </select>
+                  </div>
+                </div>
+			  </div>
+		</div>
+		<div class="ym-fbox-footer ym-fbox-button">
+			<button type="submit" class="save ym-save ym-success" id="custom">Submit</button>
+		</div>
+	</div>
+	</form>
+
+    </div>
+  </div>
+</div>
+
+
+</body>
