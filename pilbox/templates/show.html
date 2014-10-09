@@ -33,40 +33,53 @@ $(document).ready(function() {
     var type1 = '';
     var url0 = 'http://localhost:8000/image?url='+encodeURIComponent(url);
     var url1 = 'http://localhost:8000/image?url='+encodeURIComponent(url) +'&fmt='+ format +'&q='+quality;
-    $.ajax({
-     type: 'GET',
-     url: url0,
-     success: function(data, textStatus, request){
-          //alert(request.getResponseHeader('Content-Type') + request.getResponseHeader('Content-Length'));
-          type0 = request.getResponseHeader('Content-Type');
-          size0 = request.getResponseHeader('Content-Length');
 
-          $.ajax({
-           type: 'GET',
-           url: url1,
-           success: function(data, textStatus, request){
-                //alert(request.getResponseHeader('Content-Type') + request.getResponseHeader('Content-Length'));
-                type1 = request.getResponseHeader('Content-Type');
-                size1 = request.getResponseHeader('Content-Length');
+    var xmlHTTP0 = new XMLHttpRequest();
+    xmlHTTP0.open('GET', url0,true);
+
+    xmlHTTP0.responseType = 'arraybuffer';
+
+    xmlHTTP0.onload = function(e)
+    {
+
+        type0 = this.getResponseHeader('Content-Type');
+        size0 = this.getResponseHeader('Content-Length');
+
+        var arr = new Uint8Array(this.response);
+
+        var raw = String.fromCharCode.apply(null,arr);
+
+        var b64=btoa(raw);
+        var dataURL0="data:image/jpeg;base64,"+b64;
+
+            var xmlHTTP1 = new XMLHttpRequest();
+            xmlHTTP1.open('GET', url1,true);
+
+            xmlHTTP1.responseType = 'arraybuffer';
+
+            xmlHTTP1.onload = function(e)
+            {
+                type1 = this.getResponseHeader('Content-Type');
+                size1 = this.getResponseHeader('Content-Length');
+                var arr = new Uint8Array(this.response);
+
+                var raw = String.fromCharCode.apply(null,arr);
+
+                var b64=btoa(raw);
+                var dataURL1="data:image/jpeg;base64,"+b64;
 
                 var t = '<table>';
                 t += '<tr><td>' + type0 + ' | ' + size0 +'</td><td>'+type1 + ' | ' + quality + ' | ' + size1  + ' | ' + (size1/size0*100) + '%</td></tr>';
-                t += '<tr><td><img src="' +url0 +'"/></td><td> <img src="'+url1+'" /></td></tr>';
+                t += '<tr><td><img src="' +dataURL0 +'"/></td><td> <img src="'+dataURL1+'" /></td></tr>';
                 t += '</table>';
 
                 $('#image-table .row' + row).html(t);
+            };
 
-           },
-           error: function (request, textStatus, errorThrown) {
-                alert(request.getResponseHeader('Content-Type'));
-           }
-          });
+            xmlHTTP1.send();
+    };
 
-     },
-     error: function (request, textStatus, errorThrown) {
-          alert(request.getResponseHeader('Content-Type'));
-     }
-    });
+    xmlHTTP0.send();
   };
 
   image_url = "{{ url }}";
