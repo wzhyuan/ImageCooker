@@ -151,10 +151,10 @@ $(document).ready(function() {
             <div class="ym-gbox-right">
               <label for="format">format</label>
               <select name="format" id="format">
-                  <option value="jpg" selected="selected">jpg</option>
-                  <option value="png" >png</option>
-                  <option value="gif" >gif</option>
-                  <option value="webp" >webp</option>
+                  <option value="jpg" {% if format == 'jpg' %} selected="selected" {% end %}>jpg</option>
+                  <option value="png" {% if format == 'png' %} selected="selected" {% end %}>png</option>
+                  <option value="gif" {% if format == 'gif' %} selected="selected" {% end %}>gif</option>
+                  <option value="webp" {% if format == 'webp' %} selected="selected" {% end %}>webp</option>
               </select>
             </div>
           </div>
