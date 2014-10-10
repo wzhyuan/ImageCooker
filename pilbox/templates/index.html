@@ -24,7 +24,7 @@
 $(document).ready(function() {
   $("#pageshow_form").submit(function(event){
        event.preventDefault();
-    window.location="http://localhost:8000?url="+encodeURIComponent($('#url').val())+"&min_quality="+$('#min_quality').val()+"&max_quality="+$('#max_quality').val()+"&step="+$('#step').val()+"&format="+$('#format').val();
+    window.location="http://" +location.host+ "?url="+encodeURIComponent($('#url').val())+"&min_quality="+$('#min_quality').val()+"&max_quality="+$('#max_quality').val()+"&step="+$('#step').val()+"&format="+$('#format').val();
 
   });
 });

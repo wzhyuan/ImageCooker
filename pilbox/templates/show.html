@@ -23,7 +23,7 @@
 $(document).ready(function() {
   $("#pageshow_form").submit(function(event){
        event.preventDefault();
-    window.location="http://localhost:8000?url="+encodeURIComponent($('#url').val())+"&min_quality="+$('#min_quality').val()+"&max_quality="+$('#max_quality').val()+"&step="+$('#step').val()+"&format="+$('#format').val();
+    window.location="http://"+location.host+"?url="+encodeURIComponent($('#url').val())+"&min_quality="+$('#min_quality').val()+"&max_quality="+$('#max_quality').val()+"&step="+$('#step').val()+"&format="+$('#format').val();
   });
 
   function load_images(row, url, format, quality) {
@@ -31,8 +31,8 @@ $(document).ready(function() {
     var size1 = '';
     var type0 = '';
     var type1 = '';
-    var url0 = 'http://localhost:8000/image?url='+encodeURIComponent(url);
-    var url1 = 'http://localhost:8000/image?url='+encodeURIComponent(url) +'&fmt='+ format +'&q='+quality;
+    var url0 = 'http://' +location.host+ '/image?url='+encodeURIComponent(url);
+    var url1 = 'http://' +location.host+ '/image?url='+encodeURIComponent(url) +'&fmt='+ format +'&q='+quality;
 
     var xmlHTTP0 = new XMLHttpRequest();
     xmlHTTP0.open('GET', url0,true);
