@@ -31,7 +31,7 @@ $(document).ready(function() {
     var size1 = '';
     var type0 = '';
     var type1 = '';
-    var url0 = 'http://' +location.host+ '/image?url='+encodeURIComponent(url);
+    var url0 = 'http://' +location.host+ '/image?url='+encodeURIComponent(url) +'&op=noop';
     var url1 = 'http://' +location.host+ '/image?url='+encodeURIComponent(url) +'&fmt='+ format +'&q='+quality;
 
     var xmlHTTP0 = new XMLHttpRequest();
