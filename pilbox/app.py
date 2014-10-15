@@ -33,7 +33,9 @@ from tornado.options import define, options, parse_config_file
 from pilbox import errors
 from pilbox.image import Image
 from pilbox.signature import verify_signature
-
+import qrcode
+from StringIO import StringIO
+from urllib import quote
 try:
     from urlparse import urlparse, urljoin
 except ImportError:
@@ -108,7 +110,18 @@ class PilboxApplication(tornado.web.Application):
 
     def get_handlers(self):
         return [(r"/image", ImageHandler),
-                (r"/", IndexHandler)]
+                (r"/", IndexHandler),
+                (r"/qr", QrStreamHandler),]
+
+class QrStreamHandler(tornado.web.RequestHandler):
+    def get(self):
+        url = self.get_argument('addr', 'www.qq.com')
+        qr = qrcode.QRCode()
+        qr.add_data(url)
+        img = qr.make_image()
+        new_img = StringIO()
+        img.save(new_img, "PNG")
+        self.write(new_img.getvalue())
 
 class IndexHandler(tornado.web.RequestHandler):
 
@@ -123,12 +136,15 @@ class IndexHandler(tornado.web.RequestHandler):
             step        = int(self.get_argument('step', 10))
             format      = self.get_argument('format', 'jpg')
 
+            req_url = "%s://%s%s" % (self.request.protocol, self.request.host,
+                                    self.request.uri)
             params = {'title': url,
                     'url': url,
                     'max_quality': max_quality,
                     'min_quality': min_quality,
                     'step': step,
-                    'format': format}
+                    'format': format,
+                    'qr_url': quote(req_url),}
 
             self.render("show.html", **params)
 
